@@ -1,0 +1,427 @@
+**API Collection Class
+1.List
+1)Stack
+=>Last In First Out 구조(후입 선출)
+=>Top 이라고 하는 위치에서 데이터를 삽입하고 꺼내는 자료구조
+=>데이터를 삽입하는 동작을 push 라고 하고 꺼내는 동작을 pop 이라고 함 
+
+=>실습을 위한 VO 클래스 생성
+//여러 개의 값을 묶어서 표현하기 위한 클래스 - Value Object(VO)
+//getter 와 constructor 는 만들지만 setter는 만들지 않는 경우가 많음
+public class PersonVO {
+	//번호, 이름, 생일, 전화번호를 저장
+	private long num;
+	private String name;
+	private Date birthday;
+	private String phone;
+	
+	//매개변수가 없는 생성자 - default constructor 
+	//NoArgsConstructor
+	public PersonVO() {
+		super();
+	}
+
+	//AllArgsConstructor
+	public PersonVO(long num, String name, Date birthday, String phone) {
+		super();
+		this.num = num;
+		this.name = name;
+		this.birthday = birthday;
+		this.phone = phone;
+	}
+
+	//Getter
+	public long getNum() {
+		return num;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	//값을 빠르게 확인하기 위한 메서드
+	//디버깅을 위한 메서드 - 개발 과정 중 값을 확인하기 위한 목적
+	@Override
+	public String toString() {
+		return "PersonVO [num=" + num + ", name=" + name + ", birthday=" + birthday + ", phone=" + phone + "]";
+	}
+	
+	
+}
+
+
+=>실행을 위한 Main 클래스 생성하고 main 메서드를 작성한 후 실행
+public class Main {
+
+	public static void main(String[] args) {
+		//PersonVO 클래스의 인스턴스를 저장할 수 있는 Stack을 생성
+		Stack <PersonVO> stack = new Stack<>();
+		//Stack 에 데이터 저장 - push
+		stack.push(new PersonVO(1, "카리나", new Date(100, 3, 11),
+				"01011112222"));
+		stack.push(new PersonVO(2, "민지", new Date(104, 5, 7),
+				"01033334444"));
+		
+		//Stack에서 데이터 꺼내기
+		System.out.println(stack.pop());
+		System.out.println(stack.pop());
+		
+		//데이터가 2개 존재해서 2번 pop을 하면 모두 제거된 상태인데 
+		//pop을 수행해서 UnderFlow 발생 - 프로그램에서는 예외 발생
+		//System.out.println(stack.pop());
+		
+
+	}
+
+}
+
+2)Queue
+=>FIFO(First In First Out - 선입선출): 먼저 삽입한 데이터가 먼저 출력됩니다.
+=>삽입되는 위치 와 삭제되는 위치가 반대입니다.
+이 위치를 rear 와 front 라고 합니다.
+=>스케줄링에 주로 이용합니다.
+=>java 에서는 인터페이스 형태로 제공합니다.
+List 가 존재하기 때문에 ArrayList 나 LinkedList로 Queue의 역할 수행
+=>Queue 인터페이스를 implements 한 PriorityQueue 클래스를 제공
+이 클래스는 데이터를 정렬해서 순서대로 찾아갈 수 있도록 해주는 클래스입니다.
+정렬해서 저장하기 때문에 삽입되는 객체는 비교할 수 있는 메서드가 존재하거나 비교 방법을 제공을 해주어야 합니다.
+
+=>실습
+
+3)List 구조들의 정렬
+=>List 구조에 저장되는 데이터가 정렬을 수행하기 위해서는 비교할 수 있는 방법이 제공되어야 합니다.
+public class Main {
+
+	public static void main(String[] args) {
+		//PriorityQueue는 데이터를 정렬된 순서대로 꺼낼 수 있도록 해주는 클래스
+		
+		//정수를 저장하는 PriorityQueue를 만들어서 출력
+		PriorityQueue<Integer> intQueue = 
+				new PriorityQueue<>();
+		//데이터 저장
+		intQueue.offer(100);
+		intQueue.offer(70);
+		intQueue.offer(90);
+		
+		//데이터 꺼내기
+		System.out.println(intQueue.poll());
+		System.out.println(intQueue.poll());
+		
+		//PersonVO 클래스를 저장하는 우선순위 큐
+		//이상태에서 만들면 PersonVO의 크기 비교를 할 수 없기 때문에 예외 발생
+		//PriorityQueue<PersonVO> persons = new PriorityQueue<>();
+		
+		
+		//PersonVO 클래스에 Comparable 인터페이스를 implements 하고 
+		//compareTo 라는 메서드를 재정의해서 해결할 수 있고
+		
+		//Comparator 인터페이스를 대입받을 수 있는 경우에는 Comparator 인터페이스를
+		//구현한 클래스의 인스턴스를 이용해서 생성해도 됩니다.
+		PriorityQueue<PersonVO> persons = 
+				new PriorityQueue<>(new Comparator<PersonVO>() {
+
+					@Override
+					public int compare(PersonVO o1, PersonVO o2) {
+						return o2.getBirthday().compareTo(o1.getBirthday());
+					}
+					
+				});
+		
+		persons.offer(new PersonVO(
+				1, "강진축구", new Date(100, 9, 10), "01011112222"));
+		persons.offer(new PersonVO(
+				2, "프리스톤테일", new Date(102, 5, 1), "01033334444"));
+		persons.offer(new PersonVO(
+				3, "아담", new Date(97, 1, 3), "01033334444"));
+		
+		System.out.println(persons.poll());
+		System.out.println(persons.poll());
+		System.out.println(persons.poll());
+		
+	}
+
+}
+
+
+
+4)Deque
+=>양쪽에서 삽입 과 삭제가 가능한 자료구조
+=>스크롤이 가능한  뷰들이 이 Deque를 이용해서 구현되어 있습니다.
+=>java에서는 인터페이스로 제공하고 ArrayDeque 라고 하는 클래스에 구현을 해두었습니다. 
+
+2.Set
+=>데이터를 중복없이 저장하는 자료구조 인터페이스
+=>해싱을 이용하기 때문에 데이터의 저장 순서도 기본적으로는 알 수 없습니다.
+=>저장 순서를 알 수 없기 때문에 하나의 요소를 가져오는 메서드를 제공하지 않음
+
+1)구현된 메서드
+=>iterator 가 있어서 데이터를 하나씩 가져오지는 못하지만 순서대로 하나씩 접근하는 것은 가능
+=>추가, 삭제 등을 위한 메서드도 제공
+
+2)구현된 클래스
+=>HashSet: 기본이 되는 Set을 구현한 클래스, 보통의 경우 Set 이라고 하면 HashSet을 의미합니다.
+=>LinkedHahsSet: 데이터가 저장된 순서를 기억하는 Set
+=>TreeSet: 오름차순 정렬한 순서를 기억하는 Set, 크기 비교하는 방법을 제공하는 클래스의 데이터만 저장 가능
+
+3)Set 클래스들을 비교
+
+public class SetClassCompare {
+
+	public static void main(String[] args) {
+		//문자열을 저장하는 Set 인스턴스를 3개 생성
+		Set<String> hashSet = new HashSet<>();
+		Set<String> linkedHashSet = new LinkedHashSet<>();
+		Set<String> treeSet = new TreeSet<>();
+
+		//샘플 데이터 삽입
+		hashSet.add("LG EDS");
+		linkedHashSet.add("LG EDS");
+		treeSet.add("LG EDS");
+
+		hashSet.add("adamsoft");
+		linkedHashSet.add("adamsoft");
+		treeSet.add("adamsoft");
+
+		hashSet.add("39");
+		linkedHashSet.add("39");
+		treeSet.add("39");
+
+		hashSet.add("Triglows");
+		linkedHashSet.add("Triglows");
+		treeSet.add("Triglows");
+
+		hashSet.add("SM");
+		linkedHashSet.add("SM");
+		treeSet.add("SM");
+
+		hashSet.add("Choongang");
+		linkedHashSet.add("Choongang");
+		treeSet.add("Choongang");
+
+		hashSet.add("KB");
+		linkedHashSet.add("KB");
+		treeSet.add("KB");
+
+		hashSet.add("Kakao");
+		linkedHashSet.add("Kakao");
+		treeSet.add("Kakao");
+
+		//데이터 출력
+		//HashSet : 어떤 순서로 출력될 지 예측할 수 없음
+		for(String company : hashSet) {
+			System.out.print(company + "\t");
+		}
+		System.out.println();
+		//LinkedHashSet : add 한 순서대로 출력됨
+		for(String company : linkedHashSet) {
+			System.out.print(company + "\t");
+		}
+		System.out.println();
+		//TreeSet : 정렬한 순서대로 출력되는데 숫자가 영문자보다 작고 대문자가 소문자보다 작음
+		for(String company : treeSet) {
+			System.out.print(company + "\t");
+		}
+		System.out.println();
+
+
+	}
+
+}
+
+
+4)1-45까지의 랜덤한 숫자를 중복없이 6개를 저장하고 순서대로 출력하기
+=>ArrayList 와 HashSet을 사용했을 때의 차이
+
+public class Lotto {
+
+	public static void main(String[] args) {
+		//랜덤한 숫자를 추출하기 위한 인스턴스 생성
+		Random r = new Random();	
+		//ArryList 활용
+		ArrayList <Integer> al = new ArrayList<>();	
+		//ArrayList 의 size 가 6보다 작을 때 까지
+		while(al.size() < 6) {
+			//1-45 까지의 숫자를 랜덤하게 추출
+			int su = r.nextInt(45) + 1;
+			//중복 검사를 해서 통과하면 add 하고 통과하지 못하면 add 수행하지 않음
+			if(al.contains(su)) {
+				continue;
+			}
+			al.add(su);
+		}
+		//출력하기 전에 정렬
+		al.sort(null);
+		
+		System.out.println(al);
+		
+		//TreeSet: 중복된 데이터를 저장하지 않고 저장된 순서를 기억합니다.
+		TreeSet<Integer> treeSet = new TreeSet<>();
+		while(treeSet.size() < 6) {
+			//1-45 까지의 숫자를 랜덤하게 추출
+			int su = r.nextInt(45) + 1;
+			//TreeSet은 중복된 데이터를 저장하지 않기 때문에 검사할 필요가 없음
+			treeSet.add(su);
+		}
+		for(Integer i : treeSet) {
+			System.out.printf(i+"\t");
+		}
+		
+		
+
+	}
+
+}
+
+
+3.Map
+=>Key 와 Value를 한꺼번에 저장하는 자료구조 인터페이스
+=>인스턴스를 생성할 때 Key 와 Value 의 자료형 2개를 설정해야 합니다.
+특별한 경우가 아니면 Key 의 자료형은 String
+Value 의 자료형은 모든 종류의 데이터를 저장하고자 하는 경우는 Object 로 하고 그렇지 않은 경우는 저장하고자 하는 데이터의 자료형을 설정하면 됩니다.
+
+Map<Key 의 자료형, Value 의 자료형> 변수명 = 
+
+1)메서드
+=>Value put(key, value): Map 에 데이터를 저장하는 메서드인데 이미 존재하는 key를 사용하면 추가되는 것이 아니고 수정됩니다.
+
+=>Value get(key): key에 해당하는 value를 리턴, java 에서는 없는 key를 사용하면 null을 리턴
+
+=>Value remove(key): key에 해당하는 데이터 삭제
+
+=>Set<Key> keySet(): key 들을 Set으로 리턴, Map 에 저장된 모든 데이터를 순회하고자 하는 경우 이용
+
+2)Map을 구현한 클래스
+=>HashMap: key을 HashSet 형태로 보관
+=>LinkedHashMap: key를 LinkedHashSet 형태로 보관
+=>TreeMap: key를 TreeSet 형태로 보관
+
+3)용도
+=>여러 데이터를 하나로 묶어서 표현하기 위한 용도로 사용
+=>최근에는 되도록이면 Map 대신에 VO(DTO 나 Entity) 클래스를 만들어서 사용하는 것을 권장
+
+4)Map을 이용한 데이터 저장 과 읽어오기
+public class Main {
+
+	public static void main(String[] args) {
+		//HashMap 인스턴스 생성
+		Map<String, Object> map = new HashMap<>();
+		
+		//Map 에 데이터 저장 - put
+		map.put("num", 1);
+		map.put("name", "아담");
+		map.put("job", "Singer");
+		//동일한 Key에 데이터를 저장하면 이전 데이터가 삭제되고 수정됨
+		map.put("job", "Cyber Singer");
+		
+		//전체 데이터 확인
+		System.out.println(map);
+		
+		//Map 에서 데이터 가져오기
+		System.out.println(map.get("name"));
+		//존재하지 않는 key를 사용하면 자바는 null을 리턴
+		System.out.println(map.get("age"));
+		
+		//Map을 이용하면 key의 이름을 몰라도 모든 데이터를 접근하는 것이 가능
+		
+		//모든 key에 접근할 수 있는 Set을 가져오기
+		Set<String> keys = map.keySet();
+		//Set을 순회
+		for(String key : keys) {
+			//key를 순회하면서 key에 저장된 value를 확인
+			System.out.println(key + ":" + map.get(key));
+		}
+		
+
+	}
+
+}
+
+5)Map 학습 방법
+=>응용 프로그램 개발자가 될 거라면 Map을 만들어서 데이터를 저장하고 가져오는 것만 할 수 있으면 됨
+가져올 때는 없는 key를 사용했을 때 어떤 데이터가 리턴되는지 또는 에러가 발생하는지 확인할 수 있어야 함
+
+=>프레임워크 나 솔루션을 만드는 개발자가 되려고 하면 Map의 많은 메서드를 사용해보고 이를 활용할 수 있어야 합니다.
+
+4.Properties
+=>Map 과 유사한데 Key 의 자료형 과 Value 의 자료형이 String 만 가능합니다.
+=>환경 설정을 할 때 사용을 합니다.
+예전에는 환경 설정을 할 때 대부분 텍스트 파일에 key 와 value 형태로 작성을 해두고 이를 읽어서 사용하는 경우가 많았습니다.
+그 시절에 사용하던 클래스입니다.
+최근에는 XML 이나 YAML을 많이 사용하기 때문에 사용빈도는 많이 줄어들었지만 아직도 이 형태로 설정하는 경우가 있습니다.
+Spring 의 지역화 나 Spring Boot Project 의 기본 환경 설정(최근에는 YAML 로도 가능)이 대표적입니다.
+=>메서드
+String getProperty(String key)
+String setProperty(String key, String value)
+void store(OutputStream out, String comment): 파일이나 외부 서버에 저장
+void storeToXML(OutputStream out, String comment): 파일이나 외부 서버에 저장
+
+public class Main {
+
+	public static void main(String[] args) {
+		//프로퍼티스 인스턴스 생성
+		Properties properties = new Properties();
+		//없는 키를 사용하면 null 이 리턴
+		System.out.println(properties.getProperty("name"));
+		
+		//프로퍼티스에 프로퍼티를 저장
+		properties.setProperty("아담", "한국 최초의 사이버 가수");
+		properties.setProperty("강진축구", "세계 최초의 온라인 축구 게임");
+		properties.setProperty("프리스톤테일", "한국 최초의 자체 3D 엔진 MMORPG");
+		
+
+		//텍스트 파일로 저장
+		try {
+			//현재 작업 디렉토리에 파일로 저장
+			//git 에 연결되신 분은 workspace 가 아니고
+			//c 드라이브의 사용자 디렉토리 안에 자신의 계정 안에 git 디렉토리에 있습니다.
+			//properties.store(new FileOutputStream("./myproject.properties"),"텍스트로 저장");
+			properties.storeToXML(new FileOutputStream(
+					"./myproject.xml"),"xml로 저장");
+			
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
+
+}
+
+5.Branch를 만들어서 저장
+=>프로젝트에서 마우스 오른쪽을 누르고 [Team] - [Switch To] - [New Branch]를 눌러서 Branch를 생성
+=>새로운 Branch에 Commit And Push를 하게되면 새로운 Branch에 저장됩니다.
+
+
+
+**Project 를 3개 정도 하는 경우
+=>Spring Legacy Project ?
+=>Spring Boot + JPA를 이용해서 REST API Server를 구축하고 react 나 vue를 이용해서 Client Application을 구축
+=>Google의 Firebase 나 AWS 의 람다를 이용한 ServerLess 나 AWS 의 S3를 이용한 별도의 파일 업로드 서버를 구축
+
+**사용법을 알아두면 좋은 것들
+=>Git Hub: 필수
+=>Linux
+=>Docker & Kubernetes
+=>Jenkins
+=>JIRA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
