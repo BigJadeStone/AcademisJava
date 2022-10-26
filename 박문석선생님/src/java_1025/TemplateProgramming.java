@@ -22,7 +22,7 @@ public class TemplateProgramming {
 
 	public static void main(String[] args) {
 		//제너릭이 적용된 클래스의 인스턴스 만들기
-		Generics <String> g1 = new Generics<String>("Karina", "Suzi", "IU");
+		Generics <String> g1 = new Generics<>("Karina", "Suzi", "IU");
 		g1.display();
 		Generics <Integer> g2 = new Generics<>(100, 300, 200, 400);
 		g2.display();

@@ -22,12 +22,12 @@ public class CollectionTest3 {
 		//실행해서 가장 마지막에 나오는 숫자를 확인을 한 후 al을 li로 변경해서 실행하고 숫자는 확인
 		long start = System.currentTimeMillis();
 		for(int i=0; i<100000; i++) {
-			System.out.println(al.get(i));
+			System.out.println(li.get(i));
 		}
 		long end = System.currentTimeMillis();
 		System.out.println(end-start);
 		
-		System.out.println(al);
+		//System.out.println(al);
 
 	}
 

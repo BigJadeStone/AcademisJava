@@ -12,6 +12,7 @@ public class DateCreate {
 		System.out.println(currentTime);
 		
 		//원하는 날짜를 가지고 생성: 1986년 5월 5일 13:00:00 로 설정
+		//월은 0부터 시작함.
 		Date firstMeetingTime = new Date(86, 4, 5, 13, 0, 0);
 		//출력 - 년월일 시분초 출력
 		System.out.println(firstMeetingTime);
@@ -24,7 +25,20 @@ public class DateCreate {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 M월 d일 E요일");
 		System.out.println(sdf.format(firstMeetingTime));
 		
+		System.out.println("============================================");
+		
 		//연습해볼만 과제 - 년월일을 비교해서 년월일이 같으면 시간 과 분을 그렇지 않으면 년월일을 출력
+		
+		Date randomMeeting = new Date(86, 4, 5, 17, 0, 0);
+		if(randomMeeting.getYear() == firstMeetingTime.getYear() && randomMeeting.getMonth()==firstMeetingTime.getMonth() &&
+		randomMeeting.getDay()==firstMeetingTime.getDay()) {
+			SimpleDateFormat asd = new SimpleDateFormat("HH시 mm분");
+			System.out.println(asd.format(randomMeeting));
+			
+		} else {
+			System.out.println(sdf.format(randomMeeting));
+		}
+		
 		
 	}
 
